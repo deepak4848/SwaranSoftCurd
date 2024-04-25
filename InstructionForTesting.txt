@@ -1,0 +1,9 @@
+----Task are Completed on Mvc Core v8.0 and Framework 4.8---
+----Task are Completed on Code First Approach(Migration) using Entity Framework
+1.Open Project
+2.Build Project
+3.Go to Tools->Nugetpackage Manage->Package Manager Console
+4.Add migration 'Migration Name'
+5.Update migration 
+6.Build and open project and Test registration page.
+7.Test All control

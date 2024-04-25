@@ -1,0 +1,150 @@
+﻿@model SwaranSoftCurd.Models.Studentnew
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h3>Create Update Registration Form</h3>
+
+@if (TempData["AlertMessage"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            var message = '@TempData["AlertMessage"]';
+            alert(message);
+        };
+    </script>
+}
+<hr />
+<div class="row" style="background-color:burlywood">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.HiddenFor(x => x.Id)
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mobile" class="control-label"></label>
+                <input asp-for="Mobile" type="number" class="form-control" />
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"></label>
+                <select asp-for="State" class="form-control" asp-items="@(new SelectList(ViewBag.ctr,"SId","SName"))" onchange="BindCity()">
+                    <option value="0">--select--</option>
+                    @*<option value="1">Bihar</option>
+                    <option value="2">UP</option>
+                    <option value="3">HARYANA</option>
+                    <option value="3">M.P</option>
+                    <option value="3">RAJASTHAN</option>*@
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <select asp-for="City" class="form-control" asp-items="@(new SelectList(ViewBag.STT,"CId","CName"))">
+                    <option value="0">--Select--</option>
+                </select>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AboutYourself" class="control-label"></label>
+                @* <input asp-for="AboutYourself" type="textarea" class="form-control" /> *@
+                <textarea asp-for="AboutYourself" class="form-control"></textarea>
+                <span asp-validation-for="AboutYourself" class="text-danger"></span>
+            </div>
+           @*  <div class="form-group">
+                <label asp-for="UploadPhoto" class="control-label"></label>
+                <input asp-for="UploadPhoto" class="form-control" />
+                <span asp-validation-for="UploadPhoto" class="text-danger"></span>
+            </div> *@<br />
+          
+            <div class="form-group">
+                <label>File Upload</label>
+                <input type="file" name="file" required="" />
+                @{
+                    if (Model.Id > 0)
+                    {
+                        <img src="~/PICS/@Model.UploadPhoto" height="60px" width="50px" sizes="250kb" />
+
+                    }
+                    else
+                    {
+                        
+                    }
+
+                }
+
+                <span asp-validation-for="UploadPhoto" class="text-danger"></span>
+            </div>
+            <br /><div></div>
+            <div class="form-group">
+                <input type="submit" value="@ViewBag.BT" class="btn btn-primary" />|
+                <a asp-action="Show" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* <div>
+    <a asp-action="Show" class="btn btn-info">Back to List</a>
+</div> *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    function BindCity() {
+ 
+        if ($("#Id").val() > 0) {
+            alert("okkkk");
+            $.ajax({
+                url: '../GetCity',
+                type: 'post',
+                data: { A: $("#State").val() },
+                success: function (data) {
+
+                    $("#City").empty();
+                    $("#City").append($('<option></option>').html("--select--").val(0));
+                    debugger;
+                    for (var i = 0; i < data.length; i++) {
+                        $("#City").append($('<option></option>').html(data[i].cName).val(data[i].cId));
+                    }
+                },
+                error: function () {
+                    alert('city not bind !!');
+                }
+            });
+        }
+        else {
+        
+            $.ajax({
+                url: '../Registration/GetCity',
+                type: 'post',
+                data: { A: $("#State").val() },
+                success: function (data) {
+                    debugger;
+                    $("#City").empty();
+                    $("#City").append($('<option></option>').html("--select--").val(0));
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(data[i]); // Check each item in data array
+                        $("#City").append($('<option></option>').html(data[i].cName).val(data[i].cId));
+                    }
+                  
+                },
+                error: function () {
+                    alert('city not bind !!');
+                }
+            });
+        }
+    }
+</script>
